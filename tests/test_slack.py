@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 import httpx
 from httpx import AsyncClient
@@ -28,7 +30,7 @@ async def test_slack_reply(monkeypatch: pytest.MonkeyPatch, respx_mock):
     body = resp.json()
     assert body["ok"] is True
     assert body["ts"] == "1729900455.444"
-    sent = route.calls.last.request.json()
+    sent = json.loads(route.calls.last.request.content.decode())
     assert sent["channel"] == "C123"
     assert sent["thread_ts"] == "1729900314.123"
     assert "[Auto-Reply]" in sent["text"]

@@ -16,9 +16,11 @@ from .routers import health, memory, slack
 
 
 @asynccontextmanager
-def lifespan(_: FastAPI):
-    yield
-    await shutdown_dependencies()
+async def lifespan(_: FastAPI):
+    try:
+        yield
+    finally:
+        await shutdown_dependencies()
 
 
 app = FastAPI(title="Slack Q&A Agent", version="0.1.0", lifespan=lifespan)
